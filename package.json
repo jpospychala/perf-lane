@@ -1,0 +1,35 @@
+{
+  "name": "perf-lane",
+  "version": "1.0.0",
+  "description": "Performance testing harness for node",
+  "main": "perf-lane.js",
+  "bin": {
+    "perf-lane": "./bin/perf-lane"
+  },
+  "scripts": {
+    "test": "bin/perf-lane '**/test*.perf.js'"
+  },
+  "keywords": [
+    "benchmark",
+    "performance",
+    "testing"
+  ],
+  "author": "Jacek Pospychala <jacek.pospychala@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "glob": "^7.1.6",
+    "minimist": "^1.2.5"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jpospychala/perf-lane.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jpospychala/perf-lane/issues"
+  },
+  "homepage": "https://github.com/jpospychala/perf-lane#readme"
+}

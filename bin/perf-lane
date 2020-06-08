@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const glob = require('glob')
+const argv = require('minimist')(process.argv.slice(2))
+const perfLane = require('../perf-lane')
+const cwd = process.cwd()
+
+main()
+
+async function main() {
+  const files = argv._.reduce((acc, pattern) =>
+    [...acc, ...glob.sync(pattern)]
+  , [])
+  if (files.length === 0) {
+    throw new Error(`No tests found`)
+  }
+  for (let file of files) {
+    await runTest(file)
+  }
+}
+
+async function runTest(path) {
+  perfLane.__test_start()
+  require(`${cwd}/${path}`)
+  await perfLane.__run_tests()
+}
+
