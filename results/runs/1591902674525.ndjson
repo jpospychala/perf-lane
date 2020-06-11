@@ -1,0 +1,8 @@
+{"name":"test/fibonacci.perf.js","test":"fibonacci_1","n":1,"runs":26418695,"env":"unknown","min":"0","max":"15","p95":"0","tps":5663171}
+{"name":"test/fibonacci.perf.js","test":"fibonacci_1","n":10,"runs":9385179,"env":"unknown","min":"0","max":"1","p95":"0","tps":836394}
+{"name":"test/fibonacci.perf.js","test":"fibonacci_1","n":30,"runs":907,"env":"unknown","min":"15","max":"49","p95":"21","tps":60}
+{"name":"test/fibonacci.perf.js","test":"fibonacci_1","n":40,"runs":25,"env":"unknown","min":"2279","max":"2744","p95":"2713","tps":0}
+{"name":"test/fibonacci.perf.js","test":"fibonacci_2","n":1,"runs":18506805,"env":"unknown","min":"0","max":"7","p95":"0","tps":3576885}
+{"name":"test/fibonacci.perf.js","test":"fibonacci_2","n":10,"runs":6289147,"env":"unknown","min":"0","max":"2","p95":"0","tps":580501}
+{"name":"test/fibonacci.perf.js","test":"fibonacci_2","n":30,"runs":3313460,"env":"unknown","min":"0","max":"3","p95":"0","tps":264780}
+{"name":"test/fibonacci.perf.js","test":"fibonacci_2","n":40,"runs":3004543,"env":"unknown","min":"0","max":"14","p95":"0","tps":232694}

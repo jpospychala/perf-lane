@@ -1,6 +1,8 @@
 'use strict'
 
+const { basename } = require('path')
 const loggers = require('./loggers')
+const report = require('./report')
 
 const defaults = {
   transactionsPerTest: 1,
@@ -9,15 +11,16 @@ const defaults = {
   minRuns: 30,
   maxRuns: Infinity,
   logger: loggers.fileLog,
+  report,
+  format: 'svg',
   outFile: `results/runs/${Date.now()}.ndjson`,
   envName: process.env.TEST_ENV || process.env.HOSTNAME || 'unknown'
 }
 
 let state
 
-// invoked on every new test file
-function __test_start() {
-  test.options = {...defaults}
+async function run(path) {
+  test.options = { ...defaults }
   state  = {
     beforeEach: () => {},
     afterEach: () => {},
@@ -26,44 +29,37 @@ function __test_start() {
     n: [[1]],
     tests: [],
   }
-}
 
-async function __run_tests() {
-  // TODO run tests and measure and report
+  require(path)
+
   await state.before()
-  for (let [name, fn, type] of state.tests) {
+  for (let [testName, fn, type] of state.tests) {
     for (let n of state.n) {
       const testState = {
-        name,
+        name: basename(path),
+        test: testName,
         n: n[0],
         expected: n[1],
       }
-      await runTest(testState, fn, type)
+      await runTest(state, testState, fn, type)
     }
   }
   await state.after()
 }
 
-async function runTest(testState, fn, type) {
-  await state.beforeEach()
-
-  const stats = await repeatUntil(
-    testState,
-    (i) => runAndMeasure(fn, testState, type))
-  await state.afterEach()
-}
-
-async function repeatUntil(testState, asyncFn) {
+async function runTest(state, testState, testFn, type) {
   const runs = []
-  const start = Date.now()
   let i = 0
   let total = 0
 
   while (
-      ((Date.now() - start < test.options.minSecs*1000) || (i < test.options.minRuns))
-      && ((Date.now() - start < test.options.maxSecs*1000) & (i < test.options.maxRuns))
+      ((total < test.options.minSecs*1000) || (i < test.options.minRuns))
+      && ((total < test.options.maxSecs*1000) & (i < test.options.maxRuns))
   ) {
-    const time = await asyncFn(i++)
+    i++
+    await state.beforeEach(testState)
+    const time = await runAndMeasure(testFn, testState, type)
+    await state.afterEach(testState)
     runs.push(time)
     total += time
   }
@@ -72,6 +68,7 @@ async function repeatUntil(testState, asyncFn) {
   const fractionDigits = test.options.transactionsPerTest === 1 ? 0 : 4
   const result = {
     name: testState.name,
+    test: testState.test,
     n: testState.n,
     runs: i,
     env: test.options.envName,
@@ -104,6 +101,10 @@ async function runAndMeasure(fn, testState, type) {
   }
 }
 
+async function __report() {
+  await report('./', test.options.format)
+}
+
 function test(name, fn) {
   state.tests.push([name, fn])
 }
@@ -121,7 +122,7 @@ test.async = (name, fn) => {
 }
 test.for_n = prop('n')
 test.loggers = loggers
-test.__test_start = __test_start
-test.__run_tests = __run_tests
+test.run = run
+test.__report = __report
 
 module.exports = test

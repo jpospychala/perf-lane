@@ -17,13 +17,9 @@ async function main() {
     throw new Error(`No tests found`)
   }
   for (let file of files) {
-    await runTest(file)
+    await perfLane.run(cwd + '/' + file)
   }
+  await perfLane.__report()
 }
 
-async function runTest(path) {
-  perfLane.__test_start()
-  require(`${cwd}/${path}`)
-  await perfLane.__run_tests()
-}
 
