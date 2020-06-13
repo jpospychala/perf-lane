@@ -36,7 +36,7 @@ async function run(path) {
   for (let [testName, fn, type] of state.tests) {
     for (let n of state.n) {
       const testState = {
-        name: basename(path),
+        name: basename(path).split('.')[0],
         test: testName,
         n: n[0],
         expected: n[1],

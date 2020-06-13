@@ -1,6 +1,6 @@
 {
   "name": "perf-lane",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Performance testing harness for node",
   "main": "perf-lane.js",
   "bin": {
