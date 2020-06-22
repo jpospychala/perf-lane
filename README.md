@@ -44,12 +44,20 @@ test('fibonacci_2', (p) => {
 
 ```bash
 $ perf-lane fibonacci.perf.js
-'fibonacci_1' for n=1 takes 0-1ms p(95)=0ms tps=6047821 (33426305 runs)
-'fibonacci_1' for n=10 takes 0-1ms p(95)=0ms tps=662118 (7886492 runs)
-'fibonacci_1' for n=30 takes 16-29ms p(95)=16ms tps=54 (813 runs)
-'fibonacci_1' for n=40 takes 2139-2686ms p(95)=2139ms tps=0 (30 runs)
-'fibonacci_2' for n=1 takes 0-42ms p(95)=0ms tps=4348218 (26845900 runs)
-'fibonacci_2' for n=10 takes 0-3ms p(95)=0ms tps=607587 (7010943 runs)
-'fibonacci_2' for n=30 takes 0-32ms p(95)=0ms tps=267876 (3516945 runs)
-'fibonacci_2' for n=40 takes 0-22ms p(95)=0ms tps=231451 (3123432 runs)
+'fibonacci fibonacci_1' for n=1 takes 0-1ms p(95)=0ms tps=6521739 (150000 runs)
+'fibonacci fibonacci_1' for n=10 takes 0-1ms p(95)=0ms tps=852273 (150000 runs)
+'fibonacci fibonacci_1' for n=30 takes 15-22ms p(95)=15ms tps=65 (978 runs)
+'fibonacci fibonacci_1' for n=40 takes 1864-1951ms p(95)=1864ms tps=1 (30 runs)
+'fibonacci fibonacci_2' for n=1 takes 0-1ms p(95)=0ms tps=3061224 (150000 runs)
+'fibonacci fibonacci_2' for n=10 takes 0-1ms p(95)=0ms tps=688073 (150000 runs)
+'fibonacci fibonacci_2' for n=30 takes 0-2ms p(95)=0ms tps=327511 (150000 runs)
+'fibonacci fibonacci_2' for n=40 takes 0-1ms p(95)=0ms tps=274725 (150000 runs)
 ```
+
+![prefetch max](report/fibonacci_tps_n_unknown.svg)
+
+![prefetch max](report/fibonacci_min_n_unknown.svg)
+
+![prefetch max](report/fibonacci_max_n_unknown.svg)
+
+![prefetch max](report/fibonacci_p95_n_unknown.svg)

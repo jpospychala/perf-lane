@@ -2,7 +2,7 @@
 
 const { basename } = require('path')
 const loggers = require('./loggers')
-const report = require('./report')
+const { report } = require('./report')
 
 const defaults = {
   transactionsPerTest: 1,
@@ -53,8 +53,8 @@ async function runTest(state, testState, testFn, type) {
   let total = 0
 
   while (
-      ((total < test.options.minSecs*1000) || (i < test.options.minRuns))
-      && ((total < test.options.maxSecs*1000) & (i < test.options.maxRuns))
+      ((Math.max(total, i/10) < test.options.minSecs*1000) || (i < test.options.minRuns))
+      && ((Math.max(total, i/10) < test.options.maxSecs*1000) && (i < test.options.maxRuns))
   ) {
     i++
     await state.beforeEach(testState)
@@ -102,7 +102,10 @@ async function runAndMeasure(fn, testState, type) {
 }
 
 async function __report() {
-  await report('./', test.options.format)
+  await report({
+    dir: './',
+    output: test.options.format
+  })
 }
 
 function test(name, fn) {

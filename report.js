@@ -1,39 +1,52 @@
 const fs = require('fs')
+const R = require('ramda')
 const { execSync } = require('child_process')
 
-module.exports = report
+module.exports = {
+  report: createReports(readResultsDir, gnuplot),
+  createReports,
+}
 
-async function report(dir, output) {
-  const runs = fs.readdirSync(`${dir}results/runs`)
-    .reduce((acc, run) => acc.concat(
-        fs.readFileSync(`${dir}/results/runs/${run}`).toString().split('\n')
-        .filter(l => !!l)
-        .map(l => { try { return JSON.parse(l) } catch (ex) {throw new Error(`${run}/${l}: ${ex}`);}})
-      )
-    , [])
-  //const envSpecs = fs.readdirSync(`${dir}/results/envs`)
-  //  .map(env => JSON.parse(fs.readFileSync(`${dir}/results/envs/${env}`).toString()))
+function createReports(runsFn, plotFn) {
+  return async function (options) {
+    const runs = runsFn(options)
+    const envs = uniq(r => r.env, runs)
+    const names = uniq(r => r.name, runs)
+    yaxes = ['tps', 'min', 'max', 'p95']
+    xaxes = ['n']
 
-  const envs = uniq(r => r.env, runs)
-  const names = uniq(r => r.name, runs)
-  yaxes = ['tps', 'min', 'max', 'p95']
-  xaxes = ['n']
-
-  envs.forEach(env =>
-    names.forEach(name =>
-      xaxes.forEach(x =>
-        yaxes.forEach(y => {
-          const rows = runs.filter(r => r.name === name && r.env === env)
-          if (rows.length > 0) {
-            plot(rows, name, x, y, env, dir, output)
-          }
+    envs.forEach(env =>
+      names.forEach(name =>
+        xaxes.forEach(x => {
+          const rows = runs.filter(R.whereEq({ env, name }))
+          yaxes.forEach(y => {
+            if (rows.length > 0) {
+              plotFn(rows, name, x, y, env, options)
+            }
+          })
         })
       )
     )
-  )
+  }
 }
 
-function plot(rows, name, x, y, suffix, dir, output) {
+function readResultsDir({ dir }) {
+  return fs.readdirSync(`${dir}results/runs`)
+  .reduce((acc, run) => acc.concat(
+      fs.readFileSync(`${dir}/results/runs/${run}`).toString().split('\n')
+      .filter(l => !!l)
+      .map(l => {
+        try {
+          return { ...JSON.parse(l), run }
+        } catch (ex) {
+          throw new Error(`${run}/${l}: ${ex}`);
+        }
+      })
+    )
+  , [])
+}
+
+function gnuplot(rows, name, x, y, suffix, { dir, output }) {
   const explain = (term) => ({
     'tps': 'transactions per second [n]',
     'p95': '95 perentile [ms]',
@@ -73,12 +86,13 @@ set xlabel "${explain(x)}"`
   const { title, gpstyles, series } = styles[style]
 
   try { fs.mkdirSync('report', { recursive: true }); } catch (ex) {}
-  const fileName = `${dir}/report/`+[name.replace(/[ \/]/g, '_'), y, x, suffix].join('_')
+  const fileName = [name.replace(/[ \/]/g, '_'), y, x, suffix].join('_')+`.${output}`
+  const filePath = `${dir}/report/${fileName}`
   fs.writeFileSync(`${dir}/tmp.dat`, table(p))
   fs.writeFileSync(`${dir}/plot.pg`, `
 reset
 set terminal ${output} size 800,400 background rgb 'white'
-set output "${fileName}.${output}"
+set output "${filePath}"
 
 set title "${title}"
 set lmargin 9

@@ -1,0 +1,8 @@
+{"name":"fibonacci","test":"fibonacci_1","n":1,"runs":150000,"env":"unknown","min":"0","max":"1","p95":"0","tps":6521739}
+{"name":"fibonacci","test":"fibonacci_1","n":10,"runs":150000,"env":"unknown","min":"0","max":"1","p95":"0","tps":852273}
+{"name":"fibonacci","test":"fibonacci_1","n":30,"runs":978,"env":"unknown","min":"15","max":"22","p95":"16","tps":65}
+{"name":"fibonacci","test":"fibonacci_1","n":40,"runs":30,"env":"unknown","min":"1864","max":"1951","p95":"1931","tps":1}
+{"name":"fibonacci","test":"fibonacci_2","n":1,"runs":150000,"env":"unknown","min":"0","max":"1","p95":"0","tps":3061224}
+{"name":"fibonacci","test":"fibonacci_2","n":10,"runs":150000,"env":"unknown","min":"0","max":"1","p95":"0","tps":688073}
+{"name":"fibonacci","test":"fibonacci_2","n":30,"runs":150000,"env":"unknown","min":"0","max":"2","p95":"0","tps":327511}
+{"name":"fibonacci","test":"fibonacci_2","n":40,"runs":150000,"env":"unknown","min":"0","max":"1","p95":"0","tps":274725}
