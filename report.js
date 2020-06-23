@@ -31,9 +31,9 @@ function createReports(runsFn, plotFn) {
 }
 
 function readResultsDir({ dir }) {
-  return fs.readdirSync(`${dir}results/runs`)
+  return fs.readdirSync(`${dir}perf-lane/runs`)
   .reduce((acc, run) => acc.concat(
-      fs.readFileSync(`${dir}/results/runs/${run}`).toString().split('\n')
+      fs.readFileSync(`${dir}/perf-lane/runs/${run}`).toString().split('\n')
       .filter(l => !!l)
       .map(l => {
         try {
@@ -85,9 +85,9 @@ set xlabel "${explain(x)}"`
 
   const { title, gpstyles, series } = styles[style]
 
-  try { fs.mkdirSync('report', { recursive: true }); } catch (ex) {}
+  try { fs.mkdirSync('perf-lane', { recursive: true }); } catch (ex) {}
   const fileName = [name.replace(/[ \/]/g, '_'), y, x, suffix].join('_')+`.${output}`
-  const filePath = `${dir}/report/${fileName}`
+  const filePath = `${dir}/perf-lane/${fileName}`
   fs.writeFileSync(`${dir}/tmp.dat`, table(p))
   fs.writeFileSync(`${dir}/plot.pg`, `
 reset

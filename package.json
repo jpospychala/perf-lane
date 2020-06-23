@@ -7,7 +7,7 @@
     "perf-lane": "./bin/perf-lane"
   },
   "scripts": {
-    "test": "bin/perf-lane '**/test*.perf.js'"
+    "test": "bin/perf-lane 'test/fibonacci.perf.js'"
   },
   "keywords": [
     "benchmark",

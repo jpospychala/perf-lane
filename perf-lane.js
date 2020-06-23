@@ -13,7 +13,7 @@ const defaults = {
   logger: loggers.fileLog,
   report,
   format: 'svg',
-  outFile: `results/runs/${Date.now()}.ndjson`,
+  outFile: `perf-lane/runs/${new Date().toISOString()}.ndjson`,
   envName: process.env.TEST_ENV || process.env.HOSTNAME || 'unknown'
 }
 

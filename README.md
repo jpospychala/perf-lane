@@ -54,10 +54,10 @@ $ perf-lane fibonacci.perf.js
 'fibonacci fibonacci_2' for n=40 takes 0-1ms p(95)=0ms tps=274725 (150000 runs)
 ```
 
-![prefetch max](report/fibonacci_tps_n_unknown.svg)
+![prefetch max](perf-lane/fibonacci_tps_n_unknown.svg)
 
-![prefetch max](report/fibonacci_min_n_unknown.svg)
+![prefetch max](perf-lane/fibonacci_min_n_unknown.svg)
 
-![prefetch max](report/fibonacci_max_n_unknown.svg)
+![prefetch max](perf-lane/fibonacci_max_n_unknown.svg)
 
-![prefetch max](report/fibonacci_p95_n_unknown.svg)
+![prefetch max](perf-lane/fibonacci_p95_n_unknown.svg)
