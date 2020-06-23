@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jpospychala/perf-lane.svg?branch=master)](https://travis-ci.org/jpospychala/perf-lane)
+
 # perf-lane
 
 Performance testing harness for Node.js
