@@ -57,6 +57,7 @@ async function runTest(state, testState, testFn, type) {
       && ((Math.max(total, i/10) < test.options.maxSecs*1000) && (i < test.options.maxRuns))
   ) {
     i++
+    testState.i = i
     await state.beforeEach(testState)
     const time = await runAndMeasure(testFn, testState, type)
     await state.afterEach(testState)
