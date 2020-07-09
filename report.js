@@ -78,7 +78,6 @@ set xtics format ""
         return `'tmp.dat' using 1:${i+2} with ${linestyle} title columnhead(${i+1})`
         }).join(','),
       gpstyles: `
-      set xtics format ""
 set xlabel "${explain(x)}"`
     }
   }
