@@ -7,9 +7,23 @@ const argv = require('minimist')(process.argv.slice(2))
 const perfLane = require('../perf-lane')
 const cwd = process.cwd()
 
-main()
+main(argv)
 
-async function main() {
+async function main(argv) {
+  if (argv.h) {
+    console.log(`Usage: perf-lane [-r] [PATHS...]
+-r Rebuild report, dont run any tests
+`)
+    return
+  }
+
+  const rerunReport = argv.r
+
+  if (rerunReport) {
+    await perfLane.__report()
+    return
+  }
+
   const files = argv._.reduce((acc, pattern) =>
     [...acc, ...glob.sync(pattern)]
   , [])
