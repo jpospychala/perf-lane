@@ -9,7 +9,7 @@ const defaults = {
   minSecs: 15,
   maxSecs: 60,
   minRuns: 30,
-  maxRuns: Infinity,
+  maxRuns: 1000,
   logger: loggers.fileLog,
   report,
   format: 'svg',
@@ -20,7 +20,6 @@ const defaults = {
 let state
 
 async function run(path) {
-  test.options = { ...defaults }
   state  = {
     beforeEach: () => {},
     afterEach: () => {},
@@ -58,25 +57,40 @@ async function runTest(state, testState, testFn, type) {
   ) {
     i++
     testState.i = i
-    await state.beforeEach(testState)
-    const time = await runAndMeasure(testFn, testState, type)
-    await state.afterEach(testState)
-    runs.push(time)
-    total += time
+    let time
+    try {
+      await state.beforeEach(testState)
+      time = await runAndMeasure(testFn, testState, type)
+      await state.afterEach(testState)
+    } catch (ex) {
+      console.log(ex)
+      return
+    } finally {
+      runs.push(time)
+      total += time
+      test.options.logger({
+        event: 'test.progress',
+        name: testState.name,
+        test: testState.test,
+        n: testState.n,
+        runs: i,
+        total,
+      }, test.options)
+    }
   }
 
   runs.sort((a,b) => a - b)
-  const fractionDigits = test.options.transactionsPerTest === 1 ? 0 : 4
   const result = {
+    event: 'test.complete',
     name: testState.name,
     test: testState.test,
     n: testState.n,
     runs: i,
     env: test.options.envName,
-    min: (runs[0] / test.options.transactionsPerTest).toFixed(fractionDigits),
-    max: (runs[runs.length - 1] / test.options.transactionsPerTest).toFixed(fractionDigits),
-    p95: (runs[Math.floor(runs.length * 0.95)] / test.options.transactionsPerTest).toFixed(fractionDigits),
-    tps: Math.round(test.options.transactionsPerTest * runs.length*1000/total),
+    min: runs[0],
+    max: runs[runs.length - 1],
+    p95: runs[Math.floor(runs.length * 0.95)],
+    tps: Math.round(test.options.transactionsPerTest * runs.length * 1000/total),
   }
   test.options.logger(result, test.options)
 }
@@ -84,15 +98,26 @@ async function runTest(state, testState, testFn, type) {
 async function runAndMeasure(fn, testState, type) {
   if (type === 'async') {
     return await new Promise((resolve, reject) => {
-      const runNow = Date.now()
-      fn({ ...testState, end: () => {
-        const runAfter = Date.now()
-        resolve(runAfter - runNow)
-      } })
+      let runNow = Date.now()
+      fn({ ...testState,
+        start: (fn) => {
+          runNow = Date.now()
+          fn()
+        },
+        end: () => {
+          const runAfter = Date.now()
+          resolve(runAfter - runNow)
+        }
+      })
     })
   } else {
-    const runNow = Date.now()
-    const ret = fn(testState)
+    let runNow = Date.now()
+    const before = async (fn) => {
+      const ret = await fn()
+      runNow = Date.now()
+      return ret
+    }
+    const ret = fn({ ...testState, before })
     let runAfter = Date.now()
     if (ret && ret.then) {
       await ret
@@ -128,5 +153,6 @@ test.for_n = prop('n')
 test.loggers = loggers
 test.run = run
 test.__report = __report
+test.options = { ...defaults }
 
 module.exports = test

@@ -4,10 +4,11 @@
 
 Performance testing harness for Node.js
 
-Main features:
+This library exists to:
 
-- performance test as code, resembling unit tests
-- compare performance for different input sizes
+- ease benchmarking with confidence, help write repeatable tests with stable results
+- simplify comparing performance of alternate solutions and for different data sizes
+- simplify testing different setups
 
 # Examples
 
@@ -79,13 +80,15 @@ Test is either sync or returns Promise.
 - `p.i` - test invokation counter, starts from 0 for each `n`
 - `p.name` - test file name
 - `p.test` - test title
+- `p.before(fn)` - preparation section, not counted in test time
 
 
 `test.async(title: string, fn: (p) => {})` - declare async test function, that terminates by calling `end` callback.
 
 `p` Attributes: see `test(title, fn)`, additionally:
 
-- `p.end` - callback to be called on test end
+- `p.start` - callback to be called on test start (optional)
+- `p.end` - callback to be called on test end (required)
 
 `test.for_n(array)` - declare list of `[n, expected]` pairs for which test will be invoked.
 
