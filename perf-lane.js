@@ -32,8 +32,8 @@ async function run(path) {
   require(path)
 
   await state.before()
-  for (let [testName, fn, type] of state.tests) {
-    for (let n of state.n) {
+  for (let n of state.n) {
+    for (let [testName, fn, type] of state.tests) {
       const testState = {
         name: basename(path).split('.')[0],
         test: testName,
