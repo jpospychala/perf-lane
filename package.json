@@ -17,7 +17,7 @@
   "author": "Jacek Pospychala <jacek.pospychala@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "glob": "^7.1.6",
+    "glob": "^13.0.6",
     "minimist": "^1.2.5",
     "ramda": "^0.27.0"
   },
